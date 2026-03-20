@@ -3,8 +3,6 @@
 > Generate stunning, personalized wallpapers from text prompts — optionally guided by a reference image.  
 > Built with **SDXL Turbo**, **BLIP**, **FastAPI**, and **Streamlit**. Optimized for consumer GPUs (RTX 3060 / Laptop GPUs).
 ![1769893367198](https://github.com/user-attachments/assets/4289ce57-88c2-4230-8302-35f5d1091d1f)
-![1769893366921](https://git![1769893366779](https://github.com/user-attachments/assets/c1cb2b51-4cc0-44c7-820f-29d32a93053b)
-hub.com/user-attachments/assets/962e2e9a-124e-4d61-87f0-717e1b7d4697)
 ![1769893366132](https://github.com/user-attachments/assets/cf6b4902-ff22-415b-b4ff-1f54d0384298)
 
 ---
