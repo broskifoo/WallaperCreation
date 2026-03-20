@@ -1,191 +1,261 @@
-AI Wallpaper Generator (Multimodal)
+# 🎨 WallpaperCreation — AI Wallpaper Generator (Multimodal)
 
-A GPU-optimized multimodal AI wallpaper generator that creates high-quality aesthetic wallpapers using text prompts and optional reference images.
-Built with FastAPI, Streamlit, SDXL Turbo, and BLIP, designed to run efficiently on consumer GPUs like RTX 3060.
+> Generate stunning, personalized wallpapers from text prompts — optionally guided by a reference image.  
+> Built with **SDXL Turbo**, **BLIP**, **FastAPI**, and **Streamlit**. Optimized for consumer GPUs (RTX 3060 / Laptop GPUs).
 
-Overview
+---
 
-This project demonstrates a practical multimodal generative AI pipeline:
+## ✨ What It Does
 
-Text → Image generation using Stable Diffusion XL Turbo
+SoTrail WallpaperCreation is a **multimodal generative AI pipeline** that lets you:
 
-Image → Text understanding using BLIP image captioning
+- 🖊️ **Text → Wallpaper**: Type a prompt, get a unique 768×768 wallpaper in seconds
+- 🖼️ **Image + Text → Wallpaper**: Upload a reference image — BLIP captions it automatically, then SDXL Turbo fuses the visual context with your prompt to produce a semantically guided result
 
-Intelligent fusion of user prompt + visual context
+---
 
-Memory-safe inference with GPU locking and cleanup
+## 🏗️ Architecture
 
-Simple, clean frontend for interactive generation
-
-The system supports:
-
-Prompt-only image generation
-
-Prompt + reference image guided generation
-
-Architecture
+```
 User (Streamlit UI)
-        |
-        v
+        │
+        ▼
 FastAPI Backend
-        |
+        │
         ├── BLIP (CPU)
-        |     └─ Extracts semantic caption from reference image
-        |
+        │     └── Extracts semantic caption from reference image
+        │
         └── SDXL Turbo (GPU)
-              └─ Generates final image from combined prompt
+              └── Generates final 768×768 wallpaper from combined prompt
+```
 
-Key Features
+The key design choice: **BLIP runs on CPU** to keep GPU VRAM free for SDXL Turbo — no fragile image-to-image diffusion needed.
 
-Multimodal input (text + optional image)
+---
 
-SDXL Turbo for fast, high-quality generation
+## 🚀 Features
 
-BLIP-based image understanding (no fragile hacks)
+| Feature | Detail |
+|--------|--------|
+| 🧠 **Multimodal input** | Text-only OR text + reference image |
+| ⚡ **SDXL Turbo** | 1 inference step — blazing fast generation |
+| 🔍 **BLIP captioning** | Extracts rich semantic context from uploaded images |
+| 🛡️ **GPU memory safety** | Attention slicing, VAE slicing, explicit CUDA cleanup |
+| 🔒 **Async GPU locking** | Prevents concurrent inference crashes |
+| 🖥️ **Clean UI** | Streamlit frontend — no setup required |
+| 📡 **REST API** | FastAPI backend with streaming PNG response |
 
-GPU memory safety:
+---
 
-Attention slicing
+## 🗂️ Project Structure
 
-VAE slicing
+```
+WallaperCreation/
+├── backend.py          # FastAPI server — BLIP + SDXL Turbo inference
+├── streamlit_app.py    # Streamlit frontend UI
+├── requirements.txt    # Python dependencies
+├── .gitignore
+└── README.md
+```
 
-Explicit CUDA cleanup
+---
 
-RTX 3060-safe resolution (768×768)
+## 🛠️ Tech Stack
 
-Asynchronous GPU locking to prevent crashes
+### Backend
+| Library | Purpose |
+|--------|---------|
+| **FastAPI** | Async REST API server |
+| **PyTorch** | Deep learning runtime |
+| **Diffusers** | SDXL Turbo pipeline |
+| **Transformers** | BLIP image captioning |
+| **Uvicorn** | ASGI server |
+| **Pillow** | Image I/O |
 
-Clean separation of frontend and backend
+### Frontend
+| Library | Purpose |
+|--------|---------|
+| **Streamlit** | Interactive web UI |
+| **Requests** | HTTP calls to backend |
+| **Pillow** | Image display |
 
-Tech Stack
-Backend
+---
 
-Python
+## ⚙️ Installation
 
-FastAPI
+### Prerequisites
+- Python 3.10+
+- NVIDIA GPU with CUDA (recommended: RTX 3060 12GB or equivalent)
+- [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) installed
 
-PyTorch
+### Steps
 
-Diffusers
+**1. Clone the repository**
+```bash
+git clone https://github.com/broskifoo/WallaperCreation.git
+cd WallaperCreation
+```
 
-Transformers
-
-BLIP Image Captioning
-
-SDXL Turbo
-
-Frontend
-
-Streamlit
-
-Requests
-
-Pillow
-
-Installation
-1. Clone the repository
-git clone https://github.com/broskifoo/WallpaperCreation.git
-cd WallpaperCreation
-
-2. Create and activate virtual environment
+**2. Create and activate virtual environment**
+```bash
 python -m venv venv
+
+# Windows
 venv\Scripts\activate
 
-3. Install dependencies
+# macOS / Linux
+source venv/bin/activate
+```
+
+**3. Install dependencies**
+```bash
 pip install -r requirements.txt
+```
 
+> ⚠️ On first run, BLIP and SDXL Turbo weights will be auto-downloaded from Hugging Face (~6–8 GB). Ensure a stable internet connection.
 
-Make sure you have NVIDIA CUDA installed if using GPU.
+---
 
-Running the Project
-Start Backend (FastAPI)
+## ▶️ Running the Project
+
+**Terminal 1 — Start Backend**
+```bash
 uvicorn backend:app --host 0.0.0.0 --port 8000
+```
 
-Start Frontend (Streamlit)
+**Terminal 2 — Start Frontend**
+```bash
 streamlit run streamlit_app.py
+```
 
+Then open your browser at:
+- **Frontend UI** → [http://localhost:8501](http://localhost:8501)
+- **API Health check** → [http://localhost:8000](http://localhost:8000)
 
-Open browser at:
+---
 
-http://localhost:8501
+## 📡 API Reference
 
-API Endpoint
-POST /generate
+### `GET /`
+Health check.
 
-Form Data
+**Response:**
+```json
+{ "status": "ok", "device": "cuda" }
+```
 
-prompt (string, required)
+---
 
-image (file, optional)
+### `POST /generate`
+Generate a wallpaper image.
 
-Response
+**Form Data:**
 
-PNG image stream
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `prompt` | `string` | ✅ | Text description of the desired wallpaper |
+| `image` | `file` | ❌ | Optional reference image (JPG/PNG) |
 
-How Multimodality Works
+**Response:** PNG image stream (`image/png`)
 
-User uploads a reference image (optional)
+**Example (curl):**
+```bash
+# Text only
+curl -X POST http://localhost:8000/generate \
+  -F "prompt=a futuristic neon city at night, cyberpunk aesthetic" \
+  --output wallpaper.png
 
-BLIP generates a semantic caption from the image
+# Text + reference image
+curl -X POST http://localhost:8000/generate \
+  -F "prompt=surreal dreamscape" \
+  -F "image=@reference.jpg" \
+  --output wallpaper.png
+```
 
-Caption is merged with the user’s prompt
+---
 
-SDXL Turbo generates an image based on combined context
+## 🧠 How Multimodality Works
 
-This avoids unstable image-to-image diffusion while preserving semantic guidance.
+```
+1. User provides a text prompt + (optional) reference image
+2. BLIP captions the reference image → "a sunset over mountains"
+3. Caption is fused:  "surreal dreamscape, inspired by a sunset over mountains"
+4. SDXL Turbo generates the final wallpaper from the combined prompt
+```
 
-GPU & Performance Notes
+This approach gives **semantic visual guidance** without the instability of raw image-to-image diffusion pipelines.
 
-Resolution is clamped to 768×768
+---
 
-SDXL Turbo uses 1 inference step
+## 🖥️ GPU & Performance Notes
 
-BLIP runs on CPU to preserve GPU memory
+| Setting | Value |
+|--------|-------|
+| Output resolution | 768 × 768 px (VRAM-safe) |
+| Inference steps | 1 (SDXL Turbo optimized) |
+| BLIP device | CPU (to preserve GPU VRAM) |
+| SDXL device | CUDA (GPU) |
+| Attention slicing | ✅ Enabled |
+| VAE slicing | ✅ Enabled |
+| CUDA cleanup | Explicit after each request |
 
-Explicit cleanup prevents CUDA OOM errors
+**Tested on:**
+- ✅ NVIDIA RTX 3060 (12 GB VRAM)
+- ✅ Laptop GPUs (8 GB VRAM)
+- ⚠️ CPU-only mode supported but very slow
 
-Designed specifically for:
+---
 
-RTX 3060 (12GB)
+## 🔮 Future Improvements
 
-Laptop GPUs
+- [ ] **IP-Adapter** — stronger visual identity preservation from reference image
+- [ ] **ControlNet** — structure-guided generation
+- [ ] **Aspect ratio presets** — 16:9, 21:9, mobile portrait
+- [ ] **Prompt history & gallery** — browse past generations
+- [ ] **Batch generation** — multiple wallpapers per prompt
+- [ ] **Dockerized deployment** — one-command startup
+- [ ] **Hugging Face Spaces demo** — try it without local setup
 
-Student-grade hardware
+---
 
-Project Status
+## 📋 Requirements
 
-Stable
+```
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+torch==2.5.1
+diffusers==0.32.2
+transformers==4.47.1
+accelerate==1.2.1
+pillow==11.0.0
+python-multipart==0.0.20
+streamlit==1.41.1
+requests==2.32.3
+```
 
-Modular
+---
 
-Easily extensible to:
+## 📄 License
 
-IP-Adapter
+This project is for **educational and portfolio purposes**.
 
-ControlNet
+---
 
-Image variations
+## 👤 Author
 
-Batch generation
+**Aryendra Pandey**  
+B.Tech — Electronics & Communication Engineering  
+*AI • Computer Vision • Generative Models*
 
-Future Improvements
+- GitHub: [@broskifoo](https://github.com/broskifoo)
+- Repository: [WallaperCreation](https://github.com/broskifoo/WallaperCreation)
 
-IP-Adapter for stronger visual identity preservation
+---
 
-Prompt history & gallery
+## 🙏 Acknowledgments
 
-Aspect ratio presets (wallpaper formats)
-
-Dockerized deployment
-
-Hugging Face Spaces demo
-
-Author
-
-Aryendra Pandey
-B.Tech Electronics & Communication Engineering
-AI / Computer Vision / Generative Models
-
-License
-
-This project is for educational and portfolio purposes.
+- [Stability AI](https://stability.ai/) — SDXL Turbo model
+- [Salesforce BLIP](https://github.com/salesforce/BLIP) — Image captioning
+- [Hugging Face Diffusers](https://github.com/huggingface/diffusers) — Diffusion pipeline
+- [FastAPI](https://fastapi.tiangolo.com/) — Backend framework
+- [Streamlit](https://streamlit.io/) — Frontend framework
