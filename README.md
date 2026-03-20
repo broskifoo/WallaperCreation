@@ -1,4 +1,4 @@
-# 🎨 WallpaperCreation — AI Wallpaper Generator (Multimodal)
+#  WallpaperCreation — AI Wallpaper Generator (Multimodal)
 
 > Generate stunning, personalized wallpapers from text prompts — optionally guided by a reference image.  
 > Built with **SDXL Turbo**, **BLIP**, **FastAPI**, and **Streamlit**. Optimized for consumer GPUs (RTX 3060 / Laptop GPUs).
@@ -9,16 +9,16 @@
 
 ---
 
-## ✨ What It Does
+##  What It Does
 
 SoTrail WallpaperCreation is a **multimodal generative AI pipeline** that lets you:
 
-- 🖊️ **Text → Wallpaper**: Type a prompt, get a unique 768×768 wallpaper in seconds
-- 🖼️ **Image + Text → Wallpaper**: Upload a reference image — BLIP captions it automatically, then SDXL Turbo fuses the visual context with your prompt to produce a semantically guided result
+-  **Text → Wallpaper**: Type a prompt, get a unique 768×768 wallpaper in seconds
+-  **Image + Text → Wallpaper**: Upload a reference image — BLIP captions it automatically, then SDXL Turbo fuses the visual context with your prompt to produce a semantically guided result
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 User (Streamlit UI)
@@ -37,21 +37,21 @@ The key design choice: **BLIP runs on CPU** to keep GPU VRAM free for SDXL Turbo
 
 ---
 
-## 🚀 Features
+##  Features
 
 | Feature | Detail |
 |--------|--------|
-| 🧠 **Multimodal input** | Text-only OR text + reference image |
-| ⚡ **SDXL Turbo** | 1 inference step — blazing fast generation |
-| 🔍 **BLIP captioning** | Extracts rich semantic context from uploaded images |
-| 🛡️ **GPU memory safety** | Attention slicing, VAE slicing, explicit CUDA cleanup |
-| 🔒 **Async GPU locking** | Prevents concurrent inference crashes |
-| 🖥️ **Clean UI** | Streamlit frontend — no setup required |
-| 📡 **REST API** | FastAPI backend with streaming PNG response |
+|  **Multimodal input** | Text-only OR text + reference image |
+|  **SDXL Turbo** | 1 inference step — blazing fast generation |
+|  **BLIP captioning** | Extracts rich semantic context from uploaded images |
+|  **GPU memory safety** | Attention slicing, VAE slicing, explicit CUDA cleanup |
+|  **Async GPU locking** | Prevents concurrent inference crashes |
+|  **Clean UI** | Streamlit frontend — no setup required |
+|  **REST API** | FastAPI backend with streaming PNG response |
 
 ---
 
-## 🗂️ Project Structure
+##  Project Structure
 
 ```
 WallaperCreation/
@@ -64,7 +64,7 @@ WallaperCreation/
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 | Library | Purpose |
@@ -85,7 +85,7 @@ WallaperCreation/
 
 ---
 
-## ⚙️ Installation
+##  Installation
 
 ### Prerequisites
 - Python 3.10+
@@ -116,11 +116,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-> ⚠️ On first run, BLIP and SDXL Turbo weights will be auto-downloaded from Hugging Face (~6–8 GB). Ensure a stable internet connection.
+>  On first run, BLIP and SDXL Turbo weights will be auto-downloaded from Hugging Face (~6–8 GB). Ensure a stable internet connection.
 
 ---
 
-## ▶️ Running the Project
+##  Running the Project
 
 **Terminal 1 — Start Backend**
 ```bash
@@ -138,7 +138,7 @@ Then open your browser at:
 
 ---
 
-## 📡 API Reference
+##  API Reference
 
 ### `GET /`
 Health check.
@@ -157,8 +157,8 @@ Generate a wallpaper image.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `prompt` | `string` | ✅ | Text description of the desired wallpaper |
-| `image` | `file` | ❌ | Optional reference image (JPG/PNG) |
+| `prompt` | `string` |  | Text description of the desired wallpaper |
+| `image` | `file` |  | Optional reference image (JPG/PNG) |
 
 **Response:** PNG image stream (`image/png`)
 
@@ -178,7 +178,7 @@ curl -X POST http://localhost:8000/generate \
 
 ---
 
-## 🧠 How Multimodality Works
+##  How Multimodality Works
 
 ```
 1. User provides a text prompt + (optional) reference image
@@ -191,7 +191,7 @@ This approach gives **semantic visual guidance** without the instability of raw 
 
 ---
 
-## 🖥️ GPU & Performance Notes
+##  GPU & Performance Notes
 
 | Setting | Value |
 |--------|-------|
@@ -210,7 +210,7 @@ This approach gives **semantic visual guidance** without the instability of raw 
 
 ---
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 - [ ] **IP-Adapter** — stronger visual identity preservation from reference image
 - [ ] **ControlNet** — structure-guided generation
@@ -222,7 +222,7 @@ This approach gives **semantic visual guidance** without the instability of raw 
 
 ---
 
-## 📋 Requirements
+##  Requirements
 
 ```
 fastapi==0.115.6
@@ -239,13 +239,13 @@ requests==2.32.3
 
 ---
 
-## 📄 License
+##  License
 
 This project is for **educational and portfolio purposes**.
 
 ---
 
-## 👤 Author
+##  Author
 
 **Aryendra Pandey**  
 B.Tech — Electronics & Communication Engineering  
@@ -256,7 +256,7 @@ B.Tech — Electronics & Communication Engineering
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - [Stability AI](https://stability.ai/) — SDXL Turbo model
 - [Salesforce BLIP](https://github.com/salesforce/BLIP) — Image captioning
